@@ -1,13 +1,14 @@
-﻿using Acme.BookStore.Localization;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
+using Acme.BookStore.Localization;
+using Acme.BookStore.Permissions;
 using Volo.Abp.Account.Localization;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.Users;
 
-namespace Acme.BookStore.Blazor.Menus
+namespace Acme.BookStore.Blazor
 {
     public class BookStoreMenuContributor : IMenuContributor
     {
@@ -30,35 +31,45 @@ namespace Acme.BookStore.Blazor.Menus
             }
         }
 
-        private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
+        private async Task ConfigureMainMenuAsync(MenuConfigurationContext context)
         {
             var l = context.GetLocalizer<BookStoreResource>();
 
             context.Menu.Items.Insert(
                 0,
                 new ApplicationMenuItem(
-                    BookStoreMenus.Home,
+                    "BookStore.Home",
                     l["Menu:Home"],
                     "/",
                     icon: "fas fa-home"
                 )
             );
 
-            context.Menu.AddItem(
-                new ApplicationMenuItem(
-                    "BooksStore",
-                    l["Menu:BookStore"],
-                    icon: "fa fa-book"
-                ).AddItem(
-                    new ApplicationMenuItem(
-                        "BooksStore.Books",
-                        l["Menu:Books"],
-                        url: "/books"
-                    )
-                )
+            var bookStoreMenu = new ApplicationMenuItem(
+                "BooksStore",
+                l["Menu:BookStore"],
+                icon: "fa fa-book"
             );
 
-            return Task.CompletedTask;
+            context.Menu.AddItem(bookStoreMenu);
+
+            if (await context.IsGrantedAsync(BookStorePermissions.Books.Default))
+            {
+                bookStoreMenu.AddItem(new ApplicationMenuItem(
+                    "BooksStore.Books",
+                    l["Menu:Books"],
+                    url: "/books"
+                ));
+            }
+
+            if (await context.IsGrantedAsync(BookStorePermissions.Authors.Default))
+            {
+                bookStoreMenu.AddItem(new ApplicationMenuItem(
+                    "BooksStore.Authors",
+                    l["Menu:Authors"],
+                    url: "/authors"
+                ));
+            }
         }
 
         private Task ConfigureUserMenuAsync(MenuConfigurationContext context)
