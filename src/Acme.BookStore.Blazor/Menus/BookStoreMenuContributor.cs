@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Acme.BookStore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Acme.BookStore.Localization;
+using System;
+using System.Threading.Tasks;
 using Volo.Abp.Account.Localization;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.Users;
@@ -41,6 +41,20 @@ namespace Acme.BookStore.Blazor.Menus
                     l["Menu:Home"],
                     "/",
                     icon: "fas fa-home"
+                )
+            );
+
+            context.Menu.AddItem(
+                new ApplicationMenuItem(
+                    "BooksStore",
+                    l["Menu:BookStore"],
+                    icon: "fa fa-book"
+                ).AddItem(
+                    new ApplicationMenuItem(
+                        "BooksStore.Books",
+                        l["Menu:Books"],
+                        url: "/books"
+                    )
                 )
             );
 
