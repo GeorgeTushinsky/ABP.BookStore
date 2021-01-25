@@ -12,12 +12,16 @@ namespace Acme.BookStore.EntityFrameworkCore
         {
             Check.NotNull(builder, nameof(builder));
 
+            /* Configure your own tables/entities inside here */
+
             builder.Entity<Book>(b =>
             {
                 b.ToTable(BookStoreConsts.DbTablePrefix + "Books",
-                          BookStoreConsts.DbSchema);
-                b.ConfigureByConvention();
+                    BookStoreConsts.DbSchema);
+                b.ConfigureByConvention(); //auto configure for the base class props
                 b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+
+                b.HasOne<Author>().WithMany().HasForeignKey(x => x.AuthorId).IsRequired();
             });
 
             builder.Entity<Author>(b =>
