@@ -4,15 +4,17 @@ using Acme.BookStore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace Acme.BookStore.Migrations
 {
     [DbContext(typeof(BookStoreMigrationsDbContext))]
-    partial class BookStoreMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210129065452_Added_orders")]
+    partial class Added_orders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,8 +182,6 @@ namespace Acme.BookStore.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookId");
 
                     b.ToTable("AppOrders");
                 });
@@ -2107,15 +2107,6 @@ namespace Acme.BookStore.Migrations
                     b.HasOne("Acme.BookStore.Authors.Author", null)
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Acme.BookStore.Orders.Order", b =>
-                {
-                    b.HasOne("Acme.BookStore.Books.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
