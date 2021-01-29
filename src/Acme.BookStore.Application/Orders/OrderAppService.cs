@@ -11,15 +11,15 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Acme.BookStore.Orders
 {
+    [Authorize(BookStorePermissions.Orders.Default)]
     public class OrderAppService : 
         CrudAppService<
             Order,
             OrderDto,
             Guid,
             GetPagedListOrdersDto,
-            CreateOrderDto,
-            CreateOrderDto
-        >, IOrderAppService
+            CreateOrderDto>,
+        IOrderAppService
     {
         private readonly IRepository<Book, Guid> _bookRepository;
         private readonly IRepository<Author, Guid> _authorRepository;
@@ -31,11 +31,11 @@ namespace Acme.BookStore.Orders
         {
             _bookRepository = bookRepository;
             _authorRepository = authorRepository;
-            //GetPolicyName = BookStorePermissions.Orders.Default;
-            //GetListPolicyName = BookStorePermissions.Orders.Default;
-            //CreatePolicyName = BookStorePermissions.Orders.Create;
-            //UpdatePolicyName = BookStorePermissions.Orders.Edit;
-            //DeletePolicyName = BookStorePermissions.Orders.Create;
+            GetPolicyName = BookStorePermissions.Orders.Default;
+            GetListPolicyName = BookStorePermissions.Orders.Default;
+            CreatePolicyName = BookStorePermissions.Orders.Create;
+            UpdatePolicyName = BookStorePermissions.Orders.Edit;
+            DeletePolicyName = BookStorePermissions.Orders.Create;
         }
 
         public override async Task<OrderDto> CreateAsync(CreateOrderDto input)

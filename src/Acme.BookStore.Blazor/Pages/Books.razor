@@ -4,10 +4,12 @@
 @using Microsoft.AspNetCore.Authorization
 @using Volo.Abp.Application.Dtos
 @using Acme.BookStore.Books
+@using Acme.BookStore.Orders
 @using Acme.BookStore.Localization
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<BookStoreResource> L
 @inject AbpBlazorMessageLocalizerHelper<BookStoreResource> LH
+@inject IOrderAppService OrderAppService
 @inherits AbpCrudPageBase<IBookAppService, BookDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateBookDto>
 
 <Card>
@@ -45,6 +47,10 @@
                                           RequiredPolicy="@DeletePolicyName"
                                           Clicked="() => DeleteEntityAsync(context)"
                                           ConfirmationMessage="()=>GetDeleteConfirmationMessage(context)" />
+                            <EntityAction TItem="BookDto"
+                                          Text="@L["MakeOrder"]"
+                                          RequiredPolicy="@CreatePolicyName"
+                                          Clicked="() => CreateOrderAsync(context)" />
                         </EntityActions>
                     </DisplayTemplate>
                 </DataGridEntityActionsColumn>
@@ -228,5 +234,10 @@
     {
         await base.OnInitializedAsync();
         authorList = (await AppService.GetAuthorLookupAsync()).Items;
+    }
+
+    protected async void CreateOrderAsync(BookDto book)
+    {
+        await OrderAppService.CreateAsync(new CreateOrderDto() { UserId = (Guid)CurrentUser.Id, BookId = book.Id });
     }
 }

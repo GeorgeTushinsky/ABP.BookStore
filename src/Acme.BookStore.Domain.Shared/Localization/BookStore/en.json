@@ -45,6 +45,7 @@
     "Permission:Orders.Delete": "Deleting the orders",
     "Menu:Orders": "Orders",
     "Orders": "Orders",
+    "MakeOrder": "Make order",
     "AuthorDeletionConfirmationMessage": "Are you sure to delete the author '{0}'?",
     "BirthDate": "Birth date",
     "NewAuthor": "New author",
