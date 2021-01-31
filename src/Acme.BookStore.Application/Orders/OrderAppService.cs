@@ -66,9 +66,7 @@ namespace Acme.BookStore.Orders
             var totalCount = result.Count();
 
             var orderDtos = result.Select(o => {
-                var order = new OrderDto();
-                order.Id = o.order.Id;
-                order.UserId = o.order.UserId;
+                var order = ObjectMapper.Map<Order, OrderDto>(o.order);
                 order.Book = ObjectMapper.Map<Book, BookDto>(o.book);
                 order.Book.AuthorName = o.author.Name;
                 return order;
