@@ -238,6 +238,9 @@
 
     protected async void CreateOrderAsync(BookDto book)
     {
-        await OrderAppService.CreateAsync(new CreateOrderDto() { UserId = (Guid)CurrentUser.Id, BookId = book.Id });
+        var args = new CreateOrderDto() { UserId = (Guid)CurrentUser.Id, BookId = book.Id };
+        var existentOrder = await OrderAppService.GetOrderByContentAsync(args);
+        if (existentOrder == null)
+            await OrderAppService.CreateAsync(args);
     }
 }
