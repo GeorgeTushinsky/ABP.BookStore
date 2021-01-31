@@ -90,6 +90,27 @@
     </CardBody>
 </Card>
 
+<Modal @ref="@CantCreateOrderModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form style="text-align: 'center'">
+            <ModalHeader>
+                <ModalTitle>@L["Error"]</ModalTitle>
+                <CloseButton Clicked="CloseCantCreateOrderModal" />
+            </ModalHeader>
+            <ModalBody>
+                <span>@Error</span>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCantCreateOrderModal">
+                    @L["Cancel"]
+                </Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
 <Modal @ref="@CreateModal">
     <ModalBackdrop />
     <ModalContent IsCentered="true">
@@ -222,6 +243,8 @@
 @code
 {
     IReadOnlyList<AuthorLookupDto> authorList = Array.Empty<AuthorLookupDto>();
+    Modal CantCreateOrderModal;
+    string Error;
 
     public Books() // Constructor
     {
@@ -236,11 +259,21 @@
         authorList = (await AppService.GetAuthorLookupAsync()).Items;
     }
 
+    protected void CloseCantCreateOrderModal()
+    {
+        CantCreateOrderModal.Hide();
+    }
+
     protected async void CreateOrderAsync(BookDto book)
     {
         var args = new CreateOrderDto() { UserId = (Guid)CurrentUser.Id, BookId = book.Id };
         var existentOrder = await OrderAppService.GetOrderByContentAsync(args);
         if (existentOrder == null)
             await OrderAppService.CreateAsync(args);
+        else
+        {
+            Error = "You can't order same book twice!";
+            CantCreateOrderModal.Show();
+        }
     }
 }
