@@ -11,8 +11,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Acme.BookStore.Migrations
 {
     [DbContext(typeof(BookStoreMigrationsDbContext))]
-    [Migration("20210128123027_Added_Orders")]
-    partial class Added_Orders
+    [Migration("20210129065452_Added_orders")]
+    partial class Added_orders
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,8 +182,6 @@ namespace Acme.BookStore.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookId");
 
                     b.ToTable("AppOrders");
                 });
@@ -2109,15 +2107,6 @@ namespace Acme.BookStore.Migrations
                     b.HasOne("Acme.BookStore.Authors.Author", null)
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Acme.BookStore.Orders.Order", b =>
-                {
-                    b.HasOne("Acme.BookStore.Books.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

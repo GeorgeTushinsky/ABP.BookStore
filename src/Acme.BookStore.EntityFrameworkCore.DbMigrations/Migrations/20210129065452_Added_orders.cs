@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Acme.BookStore.Migrations
 {
-    public partial class Added_Orders : Migration
+    public partial class Added_orders : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,18 +24,7 @@ namespace Acme.BookStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppOrders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AppOrders_AppBooks_BookId",
-                        column: x => x.BookId,
-                        principalTable: "AppBooks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppOrders_BookId",
-                table: "AppOrders",
-                column: "BookId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
