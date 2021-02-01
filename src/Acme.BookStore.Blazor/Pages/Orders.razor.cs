@@ -20,6 +20,7 @@ namespace Acme.BookStore.Blazor.Pages
         }
         private async Task GetOrdersAsync()
         {
+
             var result = await AppService.GetListAsync(
                 new GetPagedListOrdersDto
                 {
