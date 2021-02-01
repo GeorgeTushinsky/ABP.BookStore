@@ -19,7 +19,8 @@ namespace Acme.BookStore.Orders
             OrderDto,
             Guid,
             GetPagedListOrdersDto,
-            CreateOrderDto>,
+            CreateOrderDto,
+            UpdateOrderDto>,
         IOrderAppService
     {
         private readonly IRepository<Book, Guid> _bookRepository;
@@ -110,6 +111,15 @@ namespace Acme.BookStore.Orders
                 totalCount,
                 orderDtos
             );
+        }
+
+        public override async Task<OrderDto> UpdateAsync(Guid id, UpdateOrderDto input)
+        {
+            await CheckUpdatePolicyAsync();
+
+            var order = await Repository.FirstAsync(x => x.Id == id);
+            order.IsApproved = input.IsApproved;
+            return ObjectMapper.Map<Order, OrderDto>(order);
         }
     }
 }
