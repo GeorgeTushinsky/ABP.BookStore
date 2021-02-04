@@ -6,14 +6,17 @@ using Acme.BookStore.Orders;
 using Acme.BookStore.Permissions;
 using Blazorise;
 using Blazorise.DataGrid;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Acme.BookStore.Blazor.Pages
 {
     public partial class Orders
     {
         private IReadOnlyList<OrderDto> OrderList { get; set; }
+        private Boolean HasUpdPermission;
         protected override async Task OnInitializedAsync()
         {
+            HasUpdPermission = await AuthorizationService.IsGrantedAsync(BookStorePermissions.Orders.Edit);
             await GetOrdersAsync();
         }
 

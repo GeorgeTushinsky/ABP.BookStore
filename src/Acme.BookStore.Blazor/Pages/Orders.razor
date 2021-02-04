@@ -2,8 +2,6 @@
 @attribute [Authorize(BookStorePermissions.Orders.Default)]
 @using Acme.BookStore.Permissions
 @using Microsoft.AspNetCore.Authorization
-@using Volo.Abp.Application.Dtos
-@using Acme.BookStore.Books
 @using Acme.BookStore.Orders 
 @using Acme.BookStore.Localization
 @using Microsoft.Extensions.Localization
@@ -41,7 +39,7 @@
                         </EntityActions>
                     </DisplayTemplate>
                 </DataGridEntityActionsColumn>
-                @if (CurrentUser.UserName == "admin")
+                @if (HasUpdPermission) //TODO: make HasUpdatePermission work
                 {
                     <DataGridColumn TItem="OrderDto"
                                     Field="User.UserName"
