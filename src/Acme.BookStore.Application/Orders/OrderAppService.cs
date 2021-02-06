@@ -5,6 +5,7 @@ using Acme.BookStore.Users;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -84,13 +85,17 @@ namespace Acme.BookStore.Orders
         {
             await CheckGetListPolicyAsync();
 
-            var isUserAdmin = await _userRepository.AnyAsync(x => x.Name == "admin" && x.Id == input.UserId);
+            bool updPermission = await AuthorizationService.IsGrantedAsync(BookStorePermissions.Orders.Edit);
 
             var query = from order in Repository
                         join user in _userRepository on order.UserId equals user.Id
                         join book in _bookRepository on order.BookId equals book.Id
                         join author in _authorRepository on book.AuthorId equals author.Id
+                        orderby input.Sorting
                         select new { order, book, author, user };
+            query = query
+                .Skip(input.SkipCount)
+                .Take(input.MaxResultCount);
 
             var result = await AsyncExecuter.ToListAsync(query);
 
@@ -104,7 +109,7 @@ namespace Acme.BookStore.Orders
                 return order;
             }).ToList();
 
-            if (!isUserAdmin)
+            if (!updPermission)
             {
                 orderDtos = orderDtos.Where(order => order.UserId == input.UserId).ToList();
             }

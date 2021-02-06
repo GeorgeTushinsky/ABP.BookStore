@@ -51,7 +51,6 @@
     "Permission:MyOrders.Create": "Creating new orders",
     "Permission:MyOrders.Edit": "Editing the orders",
     "Permission:MyOrders.Delete": "Deleting the orders",
-    "Menu:MyOrders": "My orders",
     "Orders": "Orders",
     "MakeOrder": "Make order",
     "Approve": "Approve",
